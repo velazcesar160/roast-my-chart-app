@@ -1,3 +1,4 @@
+// Sovereign Pro Sniper Pack - Version 1.1.1 (Force-Redeploy Trigger)
 import { useState, useRef, useEffect } from 'react';
 import { UploadCloud, Loader2, TrendingDown, Terminal, Twitter, Copy, Zap, Download } from 'lucide-react';
 
