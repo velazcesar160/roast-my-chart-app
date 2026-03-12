@@ -10,8 +10,32 @@ export default function App() {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const [waitlistEmail, setWaitlistEmail] = useState('');
   const [waitlistSuccess, setWaitlistSuccess] = useState(false);
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState('"{roast}"\n\nAudit your trades here: https://roast-my-chart-app.vercel.app #Trading #SovereignPro');
   const fileInputRef = useRef(null);
+
+  const handleWaitlistSubmit = async (e) => {
+    e.preventDefault();
+    if (!waitlistEmail) return;
+    setWaitlistLoading(true);
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: waitlistEmail })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setWaitlistSuccess(true);
+      } else {
+        alert(data.error || 'Failed to join waitlist. Please try again.');
+      }
+    } catch (err) {
+      alert('Network error. Please try again.');
+    } finally {
+      setWaitlistLoading(false);
+    }
+  };
 
   const copyWithImage = async (text) => {
     try {
@@ -303,7 +327,7 @@ export default function App() {
                   <p className="text-gray-400 text-sm">Our full trading dashboard, AI Coach, and prop firm infrastructure are almost ready. Be the first to get elite access.</p>
                 </div>
 
-                <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setWaitlistSuccess(true); }}>
+                <form className="space-y-4" onSubmit={handleWaitlistSubmit}>
                   <input 
                     type="email" 
                     required 
@@ -314,9 +338,10 @@ export default function App() {
                   />
                   <button 
                     type="submit"
-                    className="w-full bg-[#00ff88] text-black font-black py-4 rounded-xl hover:bg-[#00cc6e] transition-all uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,136,0.3)]"
+                    disabled={waitlistLoading}
+                    className={`w-full bg-[#00ff88] text-black font-black py-4 rounded-xl uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,136,0.3)] ${waitlistLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#00cc6e] transition-all'}`}
                   >
-                    Secure Spot
+                    {waitlistLoading ? 'Securing...' : 'Secure Spot'}
                   </button>
                 </form>
                 <p className="text-[10px] text-gray-600 text-center uppercase tracking-widest">No spam. Just launch details. 🦅</p>
