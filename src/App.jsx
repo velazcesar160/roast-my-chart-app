@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { UploadCloud, Loader2, TrendingDown, Terminal, Twitter, Copy, Zap } from 'lucide-react';
+import { UploadCloud, Loader2, TrendingDown, Terminal, Twitter, Copy, Zap, Download } from 'lucide-react';
 
 export default function App() {
   const [image, setImage] = useState(null);
@@ -26,6 +26,16 @@ export default function App() {
       navigator.clipboard.writeText(text);
       alert('Roast copied! (Image copy failed - browser restriction)');
     }
+  };
+
+  const downloadImage = () => {
+    if (!image) return;
+    const link = document.createElement('a');
+    link.href = image;
+    link.download = `RoastedChart_${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleFileChange = (e) => {
@@ -208,6 +218,13 @@ export default function App() {
                           className="flex items-center gap-2 bg-white/5 border border-white/10 text-zinc-300 px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-white/10 transition-all"
                         >
                           <Copy className="w-4 h-4" /> Copy Sniper Pack
+                        </button>
+
+                        <button 
+                          onClick={downloadImage}
+                          className="flex items-center gap-2 bg-white/5 border border-[#00ff88]/30 text-[#00ff88] px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-[#00ff88]/5 hover:border-[#00ff88] transition-all"
+                        >
+                          <Download className="w-4 h-4" /> Save Chart
                         </button>
 
                         <div className="flex-grow"></div>
