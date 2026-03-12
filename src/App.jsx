@@ -206,12 +206,11 @@ export default function App() {
                       <div className="mt-10 pt-8 border-t border-white/5 flex flex-wrap gap-4">
                         <button 
                           onClick={() => {
-                            const shareText = selectedTemplate.replace('{roast}', roast);
-                            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
+                            window.open('https://twitter.com/compose/tweet', '_blank');
                           }}
                           className="flex items-center gap-2 bg-[#1DA1F2] text-white px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest hover:bg-[#1a91da] transition-all transform hover:scale-105"
                         >
-                          <Twitter className="w-4 h-4" /> Share to X
+                          <Twitter className="w-4 h-4" /> Open X
                         </button>
                         
                         <button 
