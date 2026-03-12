@@ -15,9 +15,7 @@ export default async function handler(req, res) {
   const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
-    console.warn("Missing Supabase keys. Mocking success for waitlist.");
-    // In local dev without keys, we just pretend it worked
-    return res.status(200).json({ success: true, mocked: true });
+    return res.status(500).json({ error: 'Database configuration missing in Vercel. Please check SUPABASE_URL and SUPABASE_ANON_KEY.' });
   }
 
   const supabase = createClient(supabaseUrl, supabaseKey);
