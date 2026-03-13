@@ -1,13 +1,16 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+// Allow 5MB payload for high-res chart screenshots
 export const config = {
   api: {
-    bodyParser: { sizeLimit: '5mb' },
+    bodyParser: {
+      sizeLimit: '5mb',
+    },
   },
 };
 
 // ── ZERO-SETUP RATE LIMITER (In-Memory) ──
-// This will protect your free Gemini API key from basic spam without needing Redis/KV.
+// Protects your free Gemini API key from basic spam without needing Redis/KV.
 const rateLimitCache = new Map();
 const LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 3; // Max 3 roasts per minute per IP
@@ -41,8 +44,13 @@ export default async function handler(req, res) {
   try {
     const { imageBase64, mimeType } = req.body;
 
-    if (!imageBase64) return res.status(400).json({ error: 'No image provided.' });
-    if (!process.env.GEMINI_API_KEY) return res.status(500).json({ error: 'Server missing API Key.' });
+    if (!imageBase64) {
+      return res.status(400).json({ error: 'No image provided.' });
+    }
+
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({ error: 'Server configuration error: Missing API Key.' });
+    }
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
